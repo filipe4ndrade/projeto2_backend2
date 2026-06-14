@@ -5,6 +5,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 var session = require('express-session');
 var passport = require('passport');
 var swaggerUi = require('swagger-ui-express');
@@ -20,7 +21,7 @@ var usuarioRoutes = require('./routes/usuarios');
 
 var emProd = process.env.ENV === 'prod';
 
-swaggerFile.host = process.env.APP_HOST || 'localhost:3000';
+delete swaggerFile.host;
 swaggerFile.schemes = [emProd ? 'https' : 'http'];
 
 var app = express();
@@ -29,6 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 configurarHelmet(app);
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json());
