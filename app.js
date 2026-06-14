@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
 var swaggerUi = require('swagger-ui-express');
-var swaggerFile = require('./swagger_output.json');
+var swaggerFile = require('./config/swagger_output.json');
 
 var configurarHelmet = require('./config/helmet');
 var configurarPassport = require('./config/passport');
