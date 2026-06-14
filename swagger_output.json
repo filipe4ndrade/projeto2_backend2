@@ -1,0 +1,558 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "VetCare API",
+    "description": "API RESTful para gerenciamento de atendimentos veterinarios da clinica VetCare",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Index",
+      "description": "Informacoes sobre o servico"
+    },
+    {
+      "name": "Usuarios",
+      "description": "Cadastro e autenticacao de usuarios"
+    },
+    {
+      "name": "Pets",
+      "description": "Gerenciamento de pets"
+    },
+    {
+      "name": "Atendimentos",
+      "description": "Gerenciamento de atendimentos"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Insira o token JWT no formato: Bearer <token>"
+    }
+  },
+  "paths": {
+    "/api/": {
+      "get": {
+        "tags": [
+          "Index"
+        ],
+        "description": "Retorna informacoes basicas sobre o servico",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/pets/": {
+      "post": {
+        "tags": [
+          "Pets"
+        ],
+        "description": "Cadastra um novo pet",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NovoPet"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Pet cadastrado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "description": "Lista todos os pets cadastrados. Permite filtrar por especie via query string.",
+        "parameters": [
+          {
+            "name": "especie",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Filtra pets por especie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de pets",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Pet"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/atendimentos/": {
+      "post": {
+        "tags": [
+          "Atendimentos"
+        ],
+        "description": "Cadastra um novo atendimento",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NovoAtendimento"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Atendimento cadastrado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/Atendimento"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/atendimentos/{id}": {
+      "get": {
+        "tags": [
+          "Atendimentos"
+        ],
+        "description": "Consulta detalhes de um atendimento por ID, incluindo dados do pet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do atendimento",
+            "schema": {
+              "$ref": "#/definitions/Atendimento"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/atendimentos/{id}/iniciar": {
+      "put": {
+        "tags": [
+          "Atendimentos"
+        ],
+        "description": "Inicia um atendimento, alterando status para em_atendimento",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/atendimentos/{id}/finalizar": {
+      "put": {
+        "tags": [
+          "Atendimentos"
+        ],
+        "description": "Finaliza um atendimento, alterando status para finalizado",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/usuarios/cadastro": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "description": "Cadastra um novo usuario no sistema",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NovoUsuario"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuario cadastrado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/UsuarioCriado"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/usuarios/login": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "description": "Realiza login e retorna token JWT",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginUsuario"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "schema": {
+              "$ref": "#/definitions/LoginResposta"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UsuarioCriado": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "nome": {
+          "type": "string",
+          "example": "Joao Silva"
+        },
+        "usuario": {
+          "type": "string",
+          "example": "joao"
+        },
+        "perfil": {
+          "type": "string",
+          "example": "recepcao"
+        }
+      }
+    },
+    "NovoUsuario": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Joao Silva"
+        },
+        "usuario": {
+          "type": "string",
+          "example": "joao"
+        },
+        "senha": {
+          "type": "string",
+          "example": "123456"
+        },
+        "perfil": {
+          "type": "string",
+          "example": "recepcao"
+        }
+      },
+      "required": [
+        "nome",
+        "usuario",
+        "senha"
+      ]
+    },
+    "LoginUsuario": {
+      "type": "object",
+      "properties": {
+        "usuario": {
+          "type": "string",
+          "example": "joao"
+        },
+        "senha": {
+          "type": "string",
+          "example": "123456"
+        }
+      },
+      "required": [
+        "usuario",
+        "senha"
+      ]
+    },
+    "LoginResposta": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        }
+      }
+    },
+    "Pet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "nome": {
+          "type": "string",
+          "example": "Rex"
+        },
+        "especie": {
+          "type": "string",
+          "example": "Cachorro"
+        },
+        "criada_em": {
+          "type": "string",
+          "example": "2024-01-01T00:00:00.000Z"
+        },
+        "atualizada_em": {
+          "type": "string",
+          "example": "2024-01-01T00:00:00.000Z"
+        }
+      }
+    },
+    "NovoPet": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Rex"
+        },
+        "especie": {
+          "type": "string",
+          "example": "Cachorro"
+        }
+      },
+      "required": [
+        "nome",
+        "especie"
+      ]
+    },
+    "Atendimento": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "data_hora": {
+          "type": "string",
+          "example": "2024-06-15T10:00:00.000Z"
+        },
+        "motivo": {
+          "type": "string",
+          "example": "Consulta de rotina"
+        },
+        "status": {
+          "type": "string",
+          "example": "agendado"
+        },
+        "pet_id": {
+          "type": "number",
+          "example": 1
+        },
+        "usuario_id": {
+          "type": "number",
+          "example": 1
+        },
+        "criada_em": {
+          "type": "string",
+          "example": "2024-01-01T00:00:00.000Z"
+        },
+        "atualizada_em": {
+          "type": "string",
+          "example": "2024-01-01T00:00:00.000Z"
+        }
+      }
+    },
+    "NovoAtendimento": {
+      "type": "object",
+      "properties": {
+        "data_hora": {
+          "type": "string",
+          "example": "2024-06-15T10:00:00.000Z"
+        },
+        "motivo": {
+          "type": "string",
+          "example": "Consulta de rotina"
+        },
+        "pet_id": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "data_hora",
+        "motivo",
+        "pet_id"
+      ]
+    }
+  }
+}
